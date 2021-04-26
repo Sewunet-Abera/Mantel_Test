@@ -1,0 +1,501 @@
+#install and load the necessary packages
+BiocManager::install(c("cluster","factoexMineR",
+                       "corrplot","pheatmap","ComplexHeatmap"))
+
+BiocManager::install(c("dendextend","FactoMineR","factoextra", "CCA"))
+library(FactoMineR)
+library(dendextend)
+library(cluster)
+library(corrplot)
+library(complexHeatmap)
+library(pheatmap)
+library(factoextra)
+library(vegan)
+library(CCA)
+
+#Mantel test
+#correlate the dart matrix
+#metabolome data
+#load the positive file
+pos.metabol <- read.csv("/home/sewuneta/Documents/pos.metabolome.dart.csv",
+                        sep = ",", header = T, row.names = 1)
+head(pos.metabol)
+rownames(pos.metabol)
+str(pos.metabol)
+colnames(pos.metabol)
+dim(pos.metabol)
+
+
+#Load the negative file
+neg.metabol <- read.csv("/home/sewuneta/Documents/neg.metabolome.dart.csv",
+                        sep = ",", header = T, row.names = 1)
+head(neg.metabol)
+rownames(neg.metabol)
+str(neg.metabol)
+colnames(neg.metabol)
+dim(neg.metabol)
+
+
+#transpose the data
+##pos file
+pos.metabol.t <- t(pos.metabol)
+head(pos.metabol.t)
+rownames(pos.metabol.t)
+str(pos.metabol.t)
+colnames(pos.metabol.t)
+dim(pos.metabol.t)
+
+
+##neg file
+neg.metabol.t <- t(neg.metabol)
+head(neg.metabol.t)
+rownames(neg.metabol.t)
+str(neg.metabol.t)
+colnames(neg.metabol.t)
+dim(neg.metabol.t)
+
+#Normalize the data
+##omit na values 
+###pos file
+pos.metabol.df <- na.omit(pos.metabol.t)
+head(pos.metabol.df)
+
+###neg file
+neg.metabol.df <- na.omit(neg.metabol.t)
+head(neg.metabol.df)
+
+#Normalize the dataframes
+##pos file
+pos.metabol.df.scaled <- scale(pos.metabol.df)
+pos.metabol.df.scaled
+
+##neg file
+neg.metabol.df.scaled <- scale(neg.metabol.df)
+neg.metabol.df.scaled
+
+
+
+#Compute correlation
+#metabol.dist.cor <- get_dist(metabol.df.scaled, method = "pearson")
+
+# Display a subset
+#round(as.matrix(metabol.dist.cor)[1:6, 1:6], 1)
+
+
+#compute the euclidean distance
+##pos file
+pos.metabol.dist.eucl <- dist(pos.metabol.df.scaled, method = "euclidean")
+pos.metabol.dist.eucl
+
+
+#convert it to dataframe
+pos.metabol.dist.eucl <- as.matrix(pos.metabol.dist.eucl)
+pos.metabol.dist.eucl
+
+#save it
+pos.metabol.dist.eucl <- write.csv(pos.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/pos.metabol.dist.eucl.csv")
+
+pos.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/pos.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(pos.metabol.dist.eucl)
+dim(pos.metabol.dist.eucl)
+
+
+#plot the correlation
+fviz_dist(pos.metabol.dist.eucl)
+
+##neg file
+neg.metabol.dist.eucl <- dist(neg.metabol.df.scaled, method = "euclidean")
+neg.metabol.dist.eucl
+
+#plot the correlation
+fviz_dist(neg.metabol.dist.eucl)
+
+
+#convert it to dataframe
+neg.metabol.dist.eucl <- as.matrix(neg.metabol.dist.eucl)
+neg.metabol.dist.eucl
+
+#save it
+neg.metabol.dist.eucl <- write.csv(neg.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/neg.metabol.dist.eucl.csv")
+
+neg.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/neg.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(neg.metabol.dist.eucl)
+dim(neg.metabol.dist.eucl)
+
+
+#compute the euclidean distance
+##pos file
+pos.metabol.dist.eucl <- dist(pos.metabol.df.scaled, method = "euclidean")
+pos.metabol.dist.eucl
+
+
+#convert it to dataframe
+pos.metabol.dist.eucl <- as.matrix(pos.metabol.dist.eucl)
+pos.metabol.dist.eucl
+
+#save it
+pos.metabol.dist.eucl <- write.csv(pos.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/pos.metabol.dist.eucl.csv")
+
+pos.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/pos.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(pos.metabol.dist.eucl)
+dim(pos.metabol.dist.eucl)
+
+
+#plot the correlation
+fviz_dist(pos.metabol.dist.eucl)
+
+##pos file
+neg.metabol.dist.eucl <- dist(neg.metabol.df.scaled, method = "euclidean")
+neg.metabol.dist.eucl
+
+#plot the correlation
+fviz_dist(neg.metabol.dist.eucl)
+
+
+#convert it to dataframe
+neg.metabol.dist.eucl <- as.matrix(neg.metabol.dist.eucl)
+neg.metabol.dist.eucl
+
+#save it
+neg.metabol.dist.eucl <- write.csv(neg.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/neg.metabol.dist.eucl.csv")
+
+neg.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/neg.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(neg.metabol.dist.eucl)
+dim(neg.metabol.dist.eucl)
+
+
+#Load the dart data
+dart.mat <- read.csv("/mnt/sda1/2.Documents/dart.mat.rep.sorted.final.metabol.csv",
+                     sep = ",",
+                     header = T,
+                     row.names = 1)
+
+head(dart.mat)
+rownames(dart.mat)
+str(dart.mat)
+colnames(dart.mat)
+dim(dart.mat)
+
+
+#Normalize the data
+##omit na values
+dart.mat.df <- na.omit(dart.mat)
+head(dart.mat.df)
+
+#Normalize
+dart.mat.df.scaled <- scale(dart.mat.df)
+
+
+#compute the euclidean distance
+dart.mat.dist.eucl <- dist(dart.mat.df, method = "euclidean")
+dart.mat.dist.eucl
+
+#plot the correlation
+fviz_dist(dart.mat.dist.eucl)
+
+
+#Do mantel test
+#for the positive
+dart_pos.metabolome_mantel <- mantel(dart.mat.dist.eucl, 
+                                     pos.metabol.dist.eucl, 
+                                     method = "pearson", 
+                                     permutations = 9999, 
+                                     na.rm = TRUE)
+
+dart_pos.metabolome_mantel
+
+
+#for the negative
+dart_neg.metabolome_mantel <- mantel(dart.mat.dist.eucl, neg.metabol.dist.eucl, 
+                                     method = "pearson", 
+                                     permutations = 9999, 
+                                     na.rm = TRUE)
+
+dart_neg.metabolome_mantel
+
+
+#performing Correlation for neg metabolome
+X_dart <- as.matrix(dart.mat.df.scaled)
+Y_neg.metabol <- as.matrix(neg.metabol.df.scaled)
+
+#Correlate the two matricws
+neg.correl <- matcor(X_dart,Y_neg.metabol)
+neg.correl
+
+
+#plot it
+img.matcor(neg.correl, type = 2)
+
+
+#performing CCA
+neg.res.cc <- cc(X_dart,Y_neg.metabol)
+neg.res.cc
+
+
+neg.res.regul <- estim.regul(X_dart,Y_neg.metabol, 
+                             plt = TRUE,
+                             grid1 = seq(0.05, 0.2, l=51),
+                             grid2 = seq(0.05, 0.2, l=51))
+
+
+
+#performing Correlation for pos metabolome
+X_dart <- as.matrix(dart.mat.df.scaled)
+Y_pos.metabol <- as.matrix(pos.metabol.df.scaled)
+
+#Correlate the two matricws
+correl.pos <- matcor(X_dart,Y_pos.metabol)
+correl.pos
+
+
+#plot it
+img.matcor(correl.pos, type = 2)
+
+
+#performing CCA
+pos.res.cc <- cc(X_dart,Y_pos.metabol)
+pos.res.cc
+
+
+pos.res.regul <- estim.regul(X_dart,Y_pos.metabol, 
+                             plt = TRUE,
+                             grid1 = seq(0.05, 0.2, l=51),
+                             grid2 = seq(0.05, 0.2, l=51))
+
+
+#plot cca
+plt.cc(pos.res.cc, var.label = TRUE,
+       ind.names = paste(X_dart, 
+                         Y_pos.metabol, 
+                         sep = "_"))
+
+
+
+
+#DArT-Metabolome mantel test with metabolome data reduced to mean values
+#Load the dart data
+dart.mean.mat <- read.csv("/mnt/sda1/1.SewunetA/Act#Metabolome/dart_mean_matx.csv",
+                     sep = ",",
+                     header = T,
+                     row.names = 1)
+
+head(dart.mean.mat)
+rownames(dart.mean.mat)
+str(dart.mean.mat)
+colnames(dart.mean.mat)
+dim(dart.mean.mat)
+
+
+#Normalize the data
+##omit na values
+dart.mean.mat.df <- na.omit(dart.mean.mat)
+head(dart.mean.mat.df)
+
+#Normalize
+dart.mean.mat.df.scaled <- scale(dart.mean.mat.df)
+
+
+#compute the euclidean distance
+dart.mean.mat.dist.eucl <- dist(dart.mean.mat.df, method = "euclidean")
+dart.mean.mat.dist.eucl
+
+#plot the correlation
+fviz_dist(dart.mean.mat.dist.eucl)
+
+#metabolome data
+#load the mean positive file
+pos.mean.metabol <- read.csv("/mnt/sda1/1.SewunetA/Act#Metabolome/pos.mean.metabolome.dart.csv",
+                        sep = ",", header = T, row.names = 1)
+head(pos.mean.metabol)
+rownames(pos.mean.metabol)
+str(pos.mean.metabol)
+colnames(pos.mean.metabol)
+dim(pos.mean.metabol)
+
+
+#Load the mean negative file
+neg.mean.metabol <- read.csv("/mnt/sda1/1.SewunetA/Act#Metabolome/neg.mean.metabolome.dart.csv",
+                        sep = ",", header = T, row.names = 1)
+head(neg.mean.metabol)
+rownames(neg.mean.metabol)
+str(neg.mean.metabol)
+colnames(neg.mean.metabol)
+dim(neg.mean.metabol)
+
+
+
+#transpose the data
+##pos file
+pos.mean.metabol.t <- t(pos.mean.metabol)
+head(pos.mean.metabol.t)
+rownames(pos.mean.metabol.t)
+str(pos.mean.metabol.t)
+colnames(pos.mean.metabol.t)
+dim(pos.mean.metabol.t)
+
+
+##neg file
+neg.mean.metabol.t <- t(neg.mean.metabol)
+head(neg.mean.metabol.t)
+rownames(neg.mean.metabol.t)
+str(neg.mean.metabol.t)
+colnames(neg.mean.metabol.t)
+dim(neg.mean.metabol.t)
+
+#Normalize the data
+##omit na values 
+###mean pos file
+pos.mean.metabol.df <- na.omit(pos.mean.metabol.t)
+head(pos.mean.metabol.df)
+
+###neg file
+neg.mean.metabol.df <- na.omit(neg.mean.metabol.t)
+head(neg.mean.metabol.df)
+
+#Normalize the dataframes
+##mean pos file
+pos.mean.metabol.df.scaled <- scale(pos.mean.metabol.df)
+pos.mean.metabol.df.scaled
+
+##neg file
+neg.mean.metabol.df.scaled <- scale(neg.mean.metabol.df)
+neg.mean.metabol.df.scaled
+
+
+
+#compute the euclidean distance
+##pos file
+pos.mean.metabol.dist.eucl <- dist(pos.mean.metabol.df.scaled, method = "euclidean")
+pos.mean.metabol.dist.eucl
+
+
+#convert it to dataframe
+pos.mean.metabol.dist.eucl <- as.matrix(pos.mean.metabol.dist.eucl)
+pos.mean.metabol.dist.eucl
+
+#save it
+pos.mean.metabol.dist.eucl <- write.csv(pos.mean.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/pos.mean.metabol.dist.eucl.csv")
+
+pos.mean.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/pos.mean.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(pos.mean.metabol.dist.eucl)
+dim(pos.mean.metabol.dist.eucl)
+
+
+#plot the correlation
+fviz_dist(pos.mean.metabol.dist.eucl)
+
+##pos file
+neg.mean.metabol.dist.eucl <- dist(neg.mean.metabol.df.scaled, method = "euclidean")
+neg.mean.metabol.dist.eucl
+
+#plot the correlation
+fviz_dist(neg.mean.metabol.dist.eucl)
+
+
+#convert it to dataframe
+neg.mean.metabol.dist.eucl <- as.matrix(neg.mean.metabol.dist.eucl)
+neg.metabol.dist.eucl
+
+#save it
+neg.mean.metabol.dist.eucl <- write.csv(neg.mean.metabol.dist.eucl,
+                                   "/mnt/sda1/2.Documents/neg.mean.metabol.dist.eucl.csv")
+
+neg.mean.metabol.dist.eucl <- read.csv("/mnt/sda1/2.Documents/neg.mean.metabol.dist.eucl.csv",
+                                  header = T,
+                                  row.names = 1)
+head(neg.mean.metabol.dist.eucl)
+dim(neg.mean.metabol.dist.eucl)
+
+
+
+
+#Do mantel test
+#for the positive
+dart_mean.pos.metabolome_mantel <- mantel(dart.mean.mat.dist.eucl, 
+                                     pos.mean.metabol.dist.eucl, 
+                                     method = "pearson", 
+                                     permutations = 9999, 
+                                     na.rm = TRUE)
+
+dart_mean.pos.metabolome_mantel
+
+
+#for the negative
+dart_neg.mean.metabolome_mantel <- mantel(dart.mean.mat.dist.eucl, neg.mean.metabol.dist.eucl, 
+                                     method = "pearson", 
+                                     permutations = 9999, 
+                                     na.rm = TRUE)
+
+dart_neg.mean.metabolome_mantel
+
+
+
+#performing Correlation for neg metabolome
+X_mean.dart <- as.matrix(dart.mean.mat.df.scaled)
+Y_neg.mean.metabol <- as.matrix(neg.mean.metabol.df.scaled)
+
+#Correlate the two matricws
+neg.mean.correl <- matcor(X_mean.dart,Y_neg.mean.metabol)
+neg.mean.correl
+
+
+#plot it
+img.matcor(neg.mean.correl, type = 2)
+
+
+#performing CCA
+neg.mean.res.cc <- cc(X_mean.dart,Y_neg.mean.metabol)
+neg.res.cc
+
+
+neg.res.regul <- estim.regul(X_dart,Y_neg.metabol, 
+                         plt = TRUE,
+                           grid1 = seq(0.05, 0.2, l=51),
+                         grid2 = seq(0.05, 0.2, l=51))
+
+
+
+#performing Correlation for pos metabolome
+X_mean.dart <- as.matrix(dart.mean.mat.df.scaled)
+Y_pos.mean.metabol <- as.matrix(pos.mean.metabol.df.scaled)
+
+#Correlate the two matricws
+correl.mean.pos <- matcor(X_mean.dart,Y_pos.mean.metabol)
+correl.mean.pos
+
+
+#plot it
+img.matcor(correl.mean.pos, type = 2)
+
+
+#performing CCA
+pos.res.cc <- cc(X_dart,Y_pos.metabol)
+pos.res.cc
+
+
+pos.res.regul <- estim.regul(X_dart,Y_pos.metabol, 
+                         plt = TRUE,
+                         grid1 = seq(0.05, 0.2, l=51),
+                         grid2 = seq(0.05, 0.2, l=51))
+
+
+#plot cca
+plt.cc(pos.res.cc, var.label = TRUE,
+       ind.names = paste(X_dart, 
+                         Y_pos.metabol, 
+                         sep = "_"))
