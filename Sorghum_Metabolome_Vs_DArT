@@ -1,8 +1,15 @@
-#install and load the necessary packages
-BiocManager::install(c("cluster","factoexMineR",
-                       "corrplot","pheatmap","ComplexHeatmap"))
+#Install the necessary packages
+BiocManager::install(c("cluster",
+                        "factoexMineR",
+                         "corrplot",
+                         "pheatmap",
+                         "ComplexHeatmap",
+                         "dendextend",
+                         "factoextra", 
+                         "CCA",
+                         "vegan"))
 
-BiocManager::install(c("dendextend","FactoMineR","factoextra", "CCA"))
+#Load the packages
 library(FactoMineR)
 library(dendextend)
 library(cluster)
@@ -13,10 +20,8 @@ library(factoextra)
 library(vegan)
 library(CCA)
 
-#Mantel test
-#correlate the dart matrix
-#metabolome data
-#load the positive file
+#Load the metabolome data
+#load the positive mode file
 pos.metabol <- read.csv("/home/sewuneta/Documents/pos.metabolome.dart.csv",
                         sep = ",", header = T, row.names = 1)
 head(pos.metabol)
@@ -26,7 +31,7 @@ colnames(pos.metabol)
 dim(pos.metabol)
 
 
-#Load the negative file
+#Load the negative mode file
 neg.metabol <- read.csv("/home/sewuneta/Documents/neg.metabolome.dart.csv",
                         sep = ",", header = T, row.names = 1)
 head(neg.metabol)
@@ -280,8 +285,6 @@ plt.cc(pos.res.cc, var.label = TRUE,
        ind.names = paste(X_dart, 
                          Y_pos.metabol, 
                          sep = "_"))
-
-
 
 
 #DArT-Metabolome mantel test with metabolome data reduced to mean values
